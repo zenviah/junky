@@ -28,8 +28,8 @@ class RemovalCriteria:
             self.max_age = None
             self.max_age_parameter = None
         
-        self.ignore_files = config_dict.get("ignore",False).get("files",False)
-        self.ignore_dirs = config_dict.get("ignore",True).get("files",True)
+        self.ignore_files = config_dict.get("ignore",{"files":False}).get("files",False)
+        self.ignore_dirs = config_dict.get("ignore",{"dirs":True}).get("dirs",True)
 
     def meets_criteria(self, dir_entry: os.DirEntry) -> bool:
         #Check if ignored as a file/dir
@@ -58,11 +58,15 @@ class RemovalCriteria:
 
         return False
 
-
-    def get_candidates(self, dir=""):
+    def get_candidates(self, dir="."):
         """
         Get candidates for deletion
         """
 
-        return [i.path() for i in os.scandir(dir) if self.meets_criteria(i)]
+        return [i.path for i in os.scandir(dir) if self.meets_criteria(i)]
+    
+    def set_max_age(self, age: timedelta, age_parameter = "last_modified"):
+        self.max_age = age
+        self.max_age_parameter = age_parameter
+        return self
 

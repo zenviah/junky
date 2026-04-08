@@ -1,39 +1,24 @@
 import os
 from pathlib import Path
 from datetime import datetime, timedelta
+from .config import RemovalCriteria
 
 MAX_AGE = timedelta(weeks=1)
 
-def remove_old_files(path, max_age, silent=True, require_confirmation=False):
+def remove_old_files(path, removal_critera: RemovalCriteria, silent=True, require_confirmation=False):
     """
     Removes files from the provided directory that have a last modified time older than the time difference specified.
 
     :path: The path of the directory to search
-    :max_time: The max age of files before they are deleted as an int or float in seconds or a datetime.timedelta object.
-    :silent: Whether the function should run without terminal interaction (setting to False requires confimation from stdin). Defaults to true.
+    :removal_criteria: A junky.config.RemovialCriteria object defining which files should be deleted.
+    :silent: Whether the function should run without profiding feedback to stdout. Defaults to True.
+    :require_confirmation: Whether the function requires confirmation from stdin. Defaults to False.
     """
 
-    if type(max_age) != timedelta:
-        max_age = timedelta(seconds=max_age)
+    if not isinstance(removal_critera, RemovalCriteria):
+        raise TypeError(f"Expected type RemovalCritera, got {type(removal_critera)}")
 
-    files = os.listdir(path)
-
-    delete_files = []
-
-    for f in files:
-        f_path = Path(path,f)
-        if os.path.isdir(f_path):
-            continue
-
-        metadata = os.stat(f_path)
-        last_modified_time = datetime.fromtimestamp(metadata.st_mtime)
-
-        current_time = datetime.now()
-
-        last_modified_age = current_time - last_modified_time
-
-        if last_modified_age > max_age:
-            delete_files.append(f_path)
+    delete_files = removal_critera.get_candidates()
 
     n_files = len(delete_files)
 
@@ -72,4 +57,6 @@ def clean_cwd():
     in over 7 days (MAX_AGE).
     """
     
-    remove_old_files(os.getcwd(), MAX_AGE, silent=False, require_confirmation=True)
+    remove = RemovalCriteria().set_max_age(MAX_AGE)
+
+    remove_old_files(os.getcwd(), remove, silent=False, require_confirmation=True)

@@ -1,4 +1,5 @@
 import junky.cleanup
+from junky.config import RemovalCriteria
 from datetime import datetime, timedelta
 import io
 import os
@@ -115,7 +116,9 @@ def test_week_old(tmp_path):
     # Give old.txt old modified time (1970-01-01 00:00 UTC)
     os.utime("old.txt", (0,0))
 
-    junky.cleanup.remove_old_files(os.getcwd(),age)
+    rc = RemovalCriteria().set_max_age(age)
+
+    junky.cleanup.remove_old_files(os.getcwd(),rc)
 
     files = os.listdir()
 
@@ -146,7 +149,9 @@ def test_day_old(tmp_path):
     # Give old.txt old modified time (1970-01-01 00:00 UTC)
     os.utime("old.txt", (0,0))
 
-    junky.cleanup.remove_old_files(os.getcwd(),age)
+    rc = RemovalCriteria().set_max_age(age)
+
+    junky.cleanup.remove_old_files(os.getcwd(),rc)
 
     files = os.listdir()
 
@@ -168,7 +173,8 @@ def test_abort(tmp_path, capsys, monkeypatch):
 
     os.utime("file.txt",(0,0))
 
-    junky.cleanup.remove_old_files(os.getcwd(),1,require_confirmation=True)
+    rc = RemovalCriteria().set_max_age(timedelta(seconds=1))
+    junky.cleanup.remove_old_files(os.getcwd(),rc,require_confirmation=True)
 
     captured = capsys.readouterr()
 
@@ -191,7 +197,9 @@ def test_invalid_input(tmp_path, capsys, monkeypatch):
 
     os.utime("file.txt",(0,0))
 
-    junky.cleanup.remove_old_files(os.getcwd(),1,require_confirmation=True)
+    rc = RemovalCriteria().set_max_age(timedelta(seconds=1))
+
+    junky.cleanup.remove_old_files(os.getcwd(),rc,require_confirmation=True)
 
     captured = capsys.readouterr()
 
