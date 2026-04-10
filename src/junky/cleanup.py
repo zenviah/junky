@@ -5,7 +5,7 @@ from .config import RemovalCriteria
 
 MAX_AGE = timedelta(weeks=1)
 
-def remove_old_files(path, removal_critera: RemovalCriteria, silent=True, require_confirmation=False):
+def remove_files(path, removal_critera: RemovalCriteria, silent=True, require_confirmation=False):
     """
     Removes files from the provided directory that have a last modified time older than the time difference specified.
 
@@ -59,4 +59,4 @@ def clean_cwd():
     
     remove = RemovalCriteria().set_max_age(MAX_AGE)
 
-    remove_old_files(os.getcwd(), remove, silent=False, require_confirmation=True)
+    remove_files(os.getcwd(), remove, silent=False, require_confirmation=True)

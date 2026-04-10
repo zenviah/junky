@@ -94,7 +94,7 @@ def test_week_old_clean_cwd(capsys,tmp_path,monkeypatch):
     assert "more_than_a_week.txt" not in files
     assert "old.txt" not in files
 
-# remove_old_files tests
+# remove_files tests
 def test_week_old(tmp_path):
     d = tmp_path / "week_old"
     d.mkdir()
@@ -118,7 +118,7 @@ def test_week_old(tmp_path):
 
     rc = RemovalCriteria().set_max_age(age)
 
-    junky.cleanup.remove_old_files(os.getcwd(),rc)
+    junky.cleanup.remove_files(os.getcwd(),rc)
 
     files = os.listdir()
 
@@ -151,7 +151,7 @@ def test_day_old(tmp_path):
 
     rc = RemovalCriteria().set_max_age(age)
 
-    junky.cleanup.remove_old_files(os.getcwd(),rc)
+    junky.cleanup.remove_files(os.getcwd(),rc)
 
     files = os.listdir()
 
@@ -174,7 +174,7 @@ def test_abort(tmp_path, capsys, monkeypatch):
     os.utime("file.txt",(0,0))
 
     rc = RemovalCriteria().set_max_age(timedelta(seconds=1))
-    junky.cleanup.remove_old_files(os.getcwd(),rc,require_confirmation=True)
+    junky.cleanup.remove_files(os.getcwd(),rc,require_confirmation=True)
 
     captured = capsys.readouterr()
 
@@ -199,7 +199,7 @@ def test_invalid_input(tmp_path, capsys, monkeypatch):
 
     rc = RemovalCriteria().set_max_age(timedelta(seconds=1))
 
-    junky.cleanup.remove_old_files(os.getcwd(),rc,require_confirmation=True)
+    junky.cleanup.remove_files(os.getcwd(),rc,require_confirmation=True)
 
     captured = capsys.readouterr()
 

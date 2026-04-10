@@ -216,5 +216,3 @@ def test_created_age(tmp_path):
     assert len(files) == 1
     assert str(d / "less_than_2_secs.txt") not in files
     assert str(d / "more_than_2_secs.txt") in files
-
-        

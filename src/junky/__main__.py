@@ -1,4 +1,4 @@
-from junky import cleanup
+from junky import cli
 
 if __name__ == "__main__":
-    cleanup.clean_cwd()
+    cli.main()

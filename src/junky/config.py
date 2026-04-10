@@ -59,11 +59,16 @@ class RemovalCriteria:
         self.ignore_dirs = config_dict.get("ignore",{"dirs":True}).get("dirs",True)
 
     def meets_criteria(self, dir_entry: os.DirEntry) -> bool:
+        #Check if .junky
+        if dir_entry.name == ".junky":
+            return False
+
         #Check if ignored as a file/dir
         if self.ignore_files and dir_entry.is_file():
             return False
         elif self.ignore_dirs and dir_entry.is_dir():
             return False
+        
         
         #Check age settings
         if self.max_age:
