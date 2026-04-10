@@ -1,0 +1,6 @@
+# Define the __all__ variable
+__all__ = ["cleanup", "config"]
+__path__ = ["cleanup", "config"]
+
+from . import cleanup
+from . import config
