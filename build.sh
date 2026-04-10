@@ -1,1 +1,1 @@
-python -m nuitka --python-flag=-m --follow-imports --include-plugin-directory=src/junky --onefile src/junky
+python -m nuitka --python-flag=-m --follow-imports --onefile src/junky
