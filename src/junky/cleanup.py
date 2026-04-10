@@ -44,12 +44,16 @@ def remove_files(path, removal_critera: RemovalCriteria, silent=True, require_co
                 print("Invalid input")
 
     for f in delete_files:
-        try:
-            os.remove(f)
-        except Exception as e:
-            if silent:
-                raise e
-            print(f"Skipping file {f}:\n{e}")
+        p = Path(f)
+        if p.is_file():
+            try:
+                os.remove(f)
+            except Exception as e:
+                if silent:
+                    raise e
+                print(f"Skipping file {f}:\n{e}")
+        elif p.is_dir():
+            p.rmdir()
 
 def clean_cwd():
     """

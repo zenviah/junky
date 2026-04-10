@@ -10,5 +10,3 @@ def main():
         cleanup.remove_files(os.getcwd(),rc)
     else:
         cleanup.clean_cwd()
-
-

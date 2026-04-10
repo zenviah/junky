@@ -232,3 +232,28 @@ def test_ignore_junky_file(tmp_path):
     files = rc.get_candidates(os.getcwd())
 
     assert len(files) == 0
+
+def test_remove_dir(tmp_path):
+    d = tmp_path / "ignore_junky"
+    d.mkdir()
+
+    os.chdir(d)
+
+    sub_d = d / "test_dir"
+    sub_d.mkdir()
+
+    create_dummy_files(["test.txt"])
+
+    os.utime("test_dir",(0,0))
+    os.utime("test.txt",(0,0))
+
+    rc = RemovalCriteria().set_max_age(timedelta(seconds=1))
+
+    rc.ignore_dirs = False
+    rc.ignore_files = True
+
+    files = rc.get_candidates(os.getcwd())
+
+    assert len(files) == 1
+    assert str(sub_d) in files
+    assert str(d / "test.txt") not in files
