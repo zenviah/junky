@@ -216,3 +216,19 @@ def test_created_age(tmp_path):
     assert len(files) == 1
     assert str(d / "less_than_2_secs.txt") not in files
     assert str(d / "more_than_2_secs.txt") in files
+
+def test_ignore_junky_file(tmp_path):
+    d = tmp_path / "ignore_junky"
+    d.mkdir()
+
+    os.chdir(d)
+
+    create_dummy_files([".junky"])
+
+    os.utime(".junky", (0,0))
+
+    rc = RemovalCriteria().set_max_age(timedelta(seconds=1))
+
+    files = rc.get_candidates(os.getcwd())
+
+    assert len(files) == 0
