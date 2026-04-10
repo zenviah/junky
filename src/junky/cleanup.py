@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from datetime import datetime, timedelta
 from .config import RemovalCriteria
+import shutil
 
 MAX_AGE = timedelta(weeks=1)
 
@@ -53,7 +54,7 @@ def remove_files(path, removal_critera: RemovalCriteria, silent=True, require_co
                     raise e
                 print(f"Skipping file {f}:\n{e}")
         elif p.is_dir():
-            p.rmdir()
+            shutil.rmtree(f)
 
 def clean_cwd():
     """

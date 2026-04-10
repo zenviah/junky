@@ -161,6 +161,38 @@ def test_day_old(tmp_path):
     assert "more_than_a_day.txt" not in files
     assert "old.txt" not in files
 
+def test_remove_dir(tmp_path):
+    d = tmp_path / "remove_dir"
+    d.mkdir()
+
+    os.chdir(d)
+
+    sub_d = d / "test_dir"
+    sub_d.mkdir()
+
+    not_empty_d = d / "not_empty"
+    not_empty_d.mkdir()
+
+    create_dummy_files(["test.txt","not_empty/test.txt"])
+
+    os.utime("test_dir",(0,0))
+    os.utime("not_empty",(0,0))
+    os.utime("test.txt",(0,0))
+
+    rc = RemovalCriteria().set_max_age(timedelta(seconds=1))
+
+    rc.ignore_dirs = False
+    rc.ignore_files = True
+
+    junky.cleanup.remove_files(os.getcwd(),rc)
+
+    files = os.listdir()
+
+    assert len(files) == 1
+    assert "test.txt" in files
+    assert "test_dir" not in files
+    assert "not_empty" not in files
+
 def test_abort(tmp_path, capsys, monkeypatch):
     monkeypatch.setattr(sys, "stdin", io.StringIO("n\n"))
     

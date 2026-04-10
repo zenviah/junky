@@ -234,7 +234,7 @@ def test_ignore_junky_file(tmp_path):
     assert len(files) == 0
 
 def test_remove_dir(tmp_path):
-    d = tmp_path / "ignore_junky"
+    d = tmp_path / "remove_dir"
     d.mkdir()
 
     os.chdir(d)
